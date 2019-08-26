@@ -35,7 +35,9 @@ def pullMarkets(marketName):
         keyList.append(keyFrame[i].iat[0,0])
     return keyList
 
-def pullContract(marketID, contractName, filenum):
+#A sub function for the pullContract function, so that we can call "Pull Contract" as one function rather than a function and a loop.
+#Have to do this to index both lists at the same time and have the ids match with the right database.
+def subPullContract(marketID, contractName, filenum):
     keyFrame = []
     #Retrieves the contractID from the SQL file
     dbName = (filenum)
@@ -47,21 +49,23 @@ def pullContract(marketID, contractName, filenum):
     conVal = (keyFrame[0].iat[0,0])
     return conVal
 
+def pullContract(marketIDs, contractName):
+    contractIDs = []
+    for i in range(len(fileList)):
+        val = subPullContract(marketIDs[i], contractName, fileList[i])
+        contractIDs.append(val)
+    return contractIDs
+
+
+
 marketIDsDNom = pullMarkets('Who will win the 2020 Democratic presidential nomination?')
 marketIDsPrez = pullMarkets('Who will win the 2020 U.S. presidential election?')
 
 contractIDsDNom = []
 contractIDsPrez = []
 
-#I do this in a for loop rather than in the function because we have to match the market id to the same database.
-#It can be done in the function probably, but I haven't figured out how yet
-for i in range(len(fileList)):
-     val = pullContract(marketIDsDNom[i], 'Joe Biden', fileList[i])
-     contractIDsDNom.append(val)
-
-for i in range(len(fileList)):
-     val = pullContract(marketIDsPrez[i], 'Joe Biden', fileList[i])
-     contractIDsPrez.append(val)
+contractIDsPrez = pullContract(marketIDsPrez, 'Joe Biden')
+contractIDsDNom = pullContract(marketIDsDNom, 'Joe Biden')    
 
 print(contractIDsDNom)
 print(contractIDsPrez)
