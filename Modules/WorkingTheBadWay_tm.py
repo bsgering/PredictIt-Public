@@ -77,15 +77,26 @@ def pullFullDataFrame(filelist, conNums):
         #append the info to a new dataframe
     return priceDF
 
+def tradeRatio(x,y):
+    z = x / y
+    return z
+    
+
 marketNumDem = pullMarkets('Who will win the 2020 Democratic presidential nomination?', fileList)    
 marketNumPrez = pullMarkets('Who will win the 2020 U.S. presidential election?', fileList)
     
-joeConNom = pullContract(marketNumDem, 'Joe Biden', fileList)
-joeConPrez = pullContract(marketNumPrez, 'Joe Biden', fileList)
+joeConNom = pullContract(marketNumDem, 'Andrew Yang', fileList)
+joeConPrez = pullContract(marketNumPrez, 'Andrew Yang', fileList)
 
+bidenPrezPrice = pullFullDataFrame(fileList, joeConPrez)
 bidenNominationPrice = pullFullDataFrame(fileList, joeConNom)
-bidenNominationPrice = pullFullDataFrame(fileList, joeConNom)
+
+mergedset = pd.merge(bidenPrezPrice, bidenNominationPrice, left_index=True, right_index = True, how = 'outer')
+mergedset['Ratio'] = mergedset[['buy_yes_x','buy_yes_y']].apply(lambda x: tradeRatio(x.buy_yes_x, x.buy_yes_y), axis=1)
+
+print(mergedset)
+
+mergedset.reset_index().plot(x='index', y = 'Ratio')
 
 
-print(bidenNominationPrice.head())
 print('if you got nothing, failed')
