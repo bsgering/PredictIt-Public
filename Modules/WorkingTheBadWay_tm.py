@@ -62,13 +62,14 @@ def pullContract(marketIDs, contractName, filelist):
     return contractIDs
 
 def pullFullDataFrame(filelist, conNums):
-    priceDF = []
+    priceDF = pd.DataFrame()
     for i in range(len(filelist)):
         dbName = (filelist[i])
         conNum = (conNums[i])
         conn = sqlite3.connect(dbName)
-        df = pd.read_sql("SELECT buy_yes, time_stamp FROM Prices WHERE contract_id = '%d' " % (conNum), conn)
-        priceDF.append(df)
+        df = pd.read_sql("SELECT buy_yes FROM Prices WHERE contract_id = '%d' " % (conNum), conn)
+        priceDF = df.append(priceDF, ignore_index = True)
+   
         # Select from SQL command: Table: Prices
         #contractID: conNums[i]
         #value: buy_yes
@@ -76,12 +77,26 @@ def pullFullDataFrame(filelist, conNums):
         #append the info to a new dataframe
     return priceDF
 
+def tradeRatio(x,y):
+    z = x / y
+    return z
+    
+
 marketNumDem = pullMarkets('Who will win the 2020 Democratic presidential nomination?', fileList)    
 marketNumPrez = pullMarkets('Who will win the 2020 U.S. presidential election?', fileList)
     
-joeConNom = pullContract(marketNumDem, 'Joe Biden', fileList)
-joeConPrez = pullContract(marketNumPrez, 'Joe Biden', fileList)
+joeConNom = pullContract(marketNumDem, 'Andrew Yang', fileList)
+joeConPrez = pullContract(marketNumPrez, 'Andrew Yang', fileList)
 
+bidenPrezPrice = pullFullDataFrame(fileList, joeConPrez)
 bidenNominationPrice = pullFullDataFrame(fileList, joeConNom)
-print(bidenNominationPrice.head())
+
+mergedset = pd.merge(bidenPrezPrice, bidenNominationPrice, left_index=True, right_index = True, how = 'outer')
+mergedset['Ratio'] = mergedset[['buy_yes_x','buy_yes_y']].apply(lambda x: tradeRatio(x.buy_yes_x, x.buy_yes_y), axis=1)
+
+print(mergedset)
+
+mergedset.reset_index().plot(x='index', y = 'Ratio')
+
+
 print('if you got nothing, failed')
