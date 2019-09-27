@@ -21,7 +21,7 @@ from scipy.stats import norm
 
 def backteststrat (tolerance, ratiodataset):        
     data = []
-    for i in ratiodataset:
+    for i in len(ratiodataset):
         if i < 2:
             print('statserror')
         else:
