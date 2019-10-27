@@ -4,10 +4,12 @@ Created on Sun Oct 27 10:06:50 2019
 
 @author: Erik
 """
+from datetime import datetime
+
 import statistics as stat
 import pandas as pd
 from statsmodels.tsa.stattools import coint
-import matplotlib.pyplt as plt
+import matplotlib.pyplot as plt
 
 def pairsTradeModel(sOne, sTwo, cash, buyaggro, sellaggro, zscore):
     ratio = []
@@ -29,12 +31,12 @@ def pairsTradeModel(sOne, sTwo, cash, buyaggro, sellaggro, zscore):
                 sTwoHold += round((cash*buyaggro)/sTwo[i])
                 cash = cash - ((round((cash*buyaggro)/sTwo[i]))* sTwo[i])
             if x < mu - (sigma*zscore):
-                cash = cash + (round(sTwoHold*sellaggro)* sTwo[i])
-                sOneHold -= round(sTwoHold*sellaggro)
-                sTwoHold += round((cash*buyaggro)/sOne[i])
+                cash = cash + round(sTwoHold*sellaggro)* sTwo[i]
+                sTwoHold -= round(sTwoHold*sellaggro)
+                sOneHold += round((cash*buyaggro)/sOne[i])
                 cash = cash - ((round((cash*buyaggro)/sOne[i]))* sOne[i])
-        
-        portfolioVal = cash + (sTwoHold*sTwo[i]) + (sOneHold*sOne[i])
+                               
+        portfolioVal = cash + (sTwoHold * sTwo[i]) + (sOneHold * sOne[i])
         value.append(portfolioVal)
         
         if i > 90:
@@ -48,9 +50,9 @@ def pairsTradeModel(sOne, sTwo, cash, buyaggro, sellaggro, zscore):
     print('Pairs Return:' + str(cash/10000))
     print("Regular Return:" + str(sOne[len(sOne)-1]/sOne[90]))
         
-    #plt.plot(opt1, color='green')
-    #plt.plot(opt2, color='red')
-    #plt.show()
+    plt.plot(opt1, color='green')
+    plt.plot(opt2, color='red')
+    plt.show()
     
     return
 
@@ -60,7 +62,7 @@ def main():
     VOO = df['VOO'].tolist()
     SPY = df['SPY'].tolist()     
     
-    pairsTradeModel(VOO, SPY, 10000, 0.20, 0.2, 0.53)
+    pairsTradeModel(VOO, SPY, 10000, 0.10, 0.10, 0.53)
     return
 
 if __name__ == "__main__":
