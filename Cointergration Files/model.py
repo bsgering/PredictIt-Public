@@ -6,8 +6,8 @@ Created on Sun Oct 27 10:06:50 2019
 """
 import statistics as stat
 import pandas as pd
-from statsmodels import coint
-
+from statsmodels.tsa.stattools import coint
+import matplotlib.pyplt as plt
 
 def pairsTradeModel(sOne, sTwo, cash, buyaggro, sellaggro, zscore):
     ratio = []
@@ -51,5 +51,19 @@ def pairsTradeModel(sOne, sTwo, cash, buyaggro, sellaggro, zscore):
     #plt.plot(opt1, color='green')
     #plt.plot(opt2, color='red')
     #plt.show()
+    
     return
 
+def main():
+    df = pd.read_csv(r'X:\Documents\PredictIt\pita\\stock.csv')   
+    
+    VOO = df['VOO'].tolist()
+    SPY = df['SPY'].tolist()     
+    
+    pairsTradeModel(VOO, SPY, 10000, 0.20, 0.2, 0.53)
+    return
+
+if __name__ == "__main__":
+    startTime = datetime.now()
+    main()
+    print("Executed in:", datetime.now() - startTime)
