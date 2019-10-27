@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[164]:
+# In[1]:
 
 
 import urllib.request as rq
@@ -11,13 +11,13 @@ import datetime as dt
 import pandas as pd
 
 
-# In[165]:
+# In[2]:
 
 
 predictitAPIall = 'https://www.predictit.org/api/marketdata/all/'
 
 
-# In[18]:
+# In[3]:
 
 
 def getdbmaterial():
@@ -26,13 +26,13 @@ def getdbmaterial():
     return parsed_data
 
 
-# In[19]:
+# In[4]:
 
 
 #db = getdbmaterial()
 
 
-# In[118]:
+# In[5]:
 
 
 #market = db['markets']
@@ -45,7 +45,7 @@ def getdbmaterial():
 #print(len(contract))
 
 
-# In[119]:
+# In[6]:
 
 
 def marketlistmakerfordb():
@@ -57,23 +57,24 @@ def marketlistmakerfordb():
         
 
 
-# In[142]:
+# In[7]:
 
 
 def contractmakerfordb():
-    db = getdbmaterial()
-    market = db['markets']
     date = dt.datetime.now()
+    data = getdbmaterial()
+    market = data['markets']
     contractlist = []
     for i in range (0, (len(market)-1)):
         current_market = market[i]
+        market_name = market[i]['name']
         market_id = market[i]['id']
         contracts = current_market['contracts']
         for i in range(0, (len(contracts)-1)):
             current_contract = contracts[i]
             contract_id = current_contract['id']
             index = date.strftime("%Y%m%d'T'%H%M%S")+'-'+str(contract_id)
-            contract_name = current_contract['longName']
+            contract_name = current_contract['name']
             contract_end_date = current_contract['dateEnd']
             contract_status = current_contract['status']
             contract_lasttradeprice = current_contract['lastTradePrice']
@@ -82,12 +83,12 @@ def contractmakerfordb():
             contract_bestsellyes = current_contract['bestSellYesCost']
             contract_bestsellno = current_contract['bestSellNoCost']
             contract_lastcloseprice = current_contract['lastClosePrice']
-            contractlist_insert = [index, date, market_id, contract_id, contract_name, contract_end_date, 
+            contractlist_insert = [index, date, market_id, contract_id, market_name, contract_name, contract_end_date, 
                                    contract_status, contract_lasttradeprice, contract_bestbuyyes,
                                   contract_bestbuyno, contract_bestsellyes, contract_bestsellno,
                                   contract_lastcloseprice]
             contractlist.append(contractlist_insert)
-    db_column_names = ['Index','Date', 'Market ID', 'Contract ID', 'Contract Name', 'Contract End Date', 
+    db_column_names = ['Index','Date', 'Market ID', 'Contract ID', 'Market Name', 'Contract Name', 'Contract End Date', 
                       'Contract Status', 'Contract Last Trade Price', 'Contract Best Buy Yes Price',
                       'Contract Best Buy No Price', 'Contract Best Sell Yes Price', 
                       'Contract Best Sell No Price', 'Contract Last Close Price']
@@ -95,19 +96,22 @@ def contractmakerfordb():
     return database_df
 
 
-# In[162]:
+# In[9]:
 
 
-#dataframe_insert = contractmakerfordb()
-#engine = db.create_engine('sqlite:///predictit.sqlite3', echo=False)
+'''
+import sqlalchemy as db
+dataframe_insert = contractmakerfordb()
+engine = db.create_engine('sqlite:///predictit.sqlite3', echo=False)
 
-#dataframe_insert.to_sql('Contracts', con=engine, if_exists='append', index_label='id')
+dataframe_insert.to_sql('Contracts', con=engine, if_exists='append', index_label='id')
+'''
 
 
-# In[163]:
+# In[10]:
 
 
-#engine.execute("SELECT COUNT(*) FROM Contracts").fetchall()
+'''engine.execute("SELECT COUNT(*) FROM Contracts").fetchall()'''
 
 
 # In[ ]:
