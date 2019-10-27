@@ -7,30 +7,34 @@ This is a temporary script file.
 from datetime import datetime
 
 import pandas as pd
-import matplotlib as plt
+#import matplotlib.pyplt as plt
 import statistics as stat
 
-def pairsTradeModel(stockOne, stockTwo, ptarget, buyaggro, sellaggro):
+def pairsTradeModel(stockOne, stockTwo, zscore, buyaggro, sellaggro):
     ratio = []
     portfolioValue = []
     benchmark = []
    
-    cash = 100
+    cash = 10000
     startValue = cash
+
     sOneHold = 0
     sTwoHold = 0
     
+
     for i in range(len(stockOne)):
-        x = stockOne[i]/stockTwo[i]       
-        if i > 10000:
+    
+        x = stockOne[i]/stockTwo[i]
+
+        if i > 90:
             mu = stat.mean(ratio)
             sigma = stat.stdev(ratio)
-            if x > (mu + (sigma * ptarget)):
-                cash += (round(sOneHold*sellaggro) * stockOne[i])
+            if x > (mu + (sigma * zscore)):
+                cash += (round(sOneHold*sellaggro)* stockOne[i])
                 sOneHold -= round(sOneHold*sellaggro)
                 sTwoHold += round((cash*buyaggro)/stockTwo[i])
-                cash -= round((cash*buyaggro)/stockTwo[i]) * stockTwo[i]
-            if x < (mu + (sigma * ptarget)):
+                cash = cash - ((round(sTwoHold*buyaggro)/stockTwo[i])) * stockTwo[i]
+            if x < (mu - (sigma * zscore)):
                 cash += (round(sTwoHold*sellaggro) * stockOne[i])
                 sTwoHold -= round(sTwoHold*sellaggro)
                 sOneHold += round((cash*buyaggro)/stockTwo[i])
@@ -42,27 +46,28 @@ def pairsTradeModel(stockOne, stockTwo, ptarget, buyaggro, sellaggro):
         portfolioValue.append(value)
         benchmark.append(benchmarkval)
     
-    plt.pyplt.plot(benchmark, color="blue")
-    plt.pyplt.plot(portfolioValue, color = "red")
-    plt.pyplt.show()
-    
-    plt.pyplt.clf()
-    plt.pyplt.plot(ratio)
-    plt.pyplt.show()
-    
-    print("Total Benchmark Return:", benchmarkval[len(benchmark) -1]/benchmarkval[0])
-    print("Total Pairs Return:", portfolioValue[len(benchmark) -1]/ portfolioValue[0])
+#    plt.plot(benchmark, color="blue")
+#    plt.plot(portfolioValue, color = "red")
+#    plt.show()
+#    
+#    plt.clf()
+#    plt.plot(ratio)
+#    plt.show()
+#    
+    print("Total Benchmark Return:", benchmark[len(benchmark)-1]/benchmark[0])
+    print("Total Pairs Return:", portfolioValue[len(portfolioValue)-1]/ portfolioValue[0])
+    print(portfolioValue[len(portfolioValue)-1])
     
     return
 
 
 def main():
-    df = pd.read_csv(r'X:\Documents\PredictIt\pita\\prices.csv')   
+    df = pd.read_csv(r'X:\Documents\PredictIt\pita\\stock.csv')   
     
-    nomination = df['buy_yes_y'].tolist()
-    prez = df['buy_yes_x'].tolist()   
+    nomination = df['VOO'].tolist()
+    prez = df['SPY'].tolist()   
     
-    pairsTradeModel(nomination, prez, 1.96,0.25,0.25)
+    pairsTradeModel(nomination, prez, 1.96,0.1,0.2)
     
     
     return
@@ -70,5 +75,5 @@ def main():
 if __name__ == "__main__":
     startTime = datetime.now()
     main()
-    print("Test executed in:", datetime.now() - startTime)
+    print("Executed in:", datetime.now() - startTime)
 #    exit()
