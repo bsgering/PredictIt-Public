@@ -43,9 +43,9 @@ def pairsTradeModel(sOne, sTwo, cash, buyaggro, sellaggro, zscore, startday):
             # see https://stats.stackexchange.com/questions/24878/computation-of-new-standard-deviation-using-old-standard-deviation-after-change
             if x > mu + (sigma*zscore):
                 cash = cash + (round(sOneHold*sellaggro)* sOne[i])
-#                print("Sell " + str(round(sOneHold*sellaggro)) + " Nomination")
+#                print("Sell " + str(sellaggro) + " Nomination")
                 sOneHold -= round(sOneHold*sellaggro)
-#                print("Buy " + str(round((cash*buyaggro)/sTwo[i])) + " Presidential")
+#                print("Buy " + str(buyaggro) + " Presidential")
                 try:
                     sOnePur -= round(sOneHold*sellaggro) * (sOnePur/sOneHold)
                 except:
@@ -59,9 +59,9 @@ def pairsTradeModel(sOne, sTwo, cash, buyaggro, sellaggro, zscore, startday):
             
             if x < mu - (sigma*zscore):
                 cash = cash + round(sTwoHold*sellaggro)* sTwo[i]
-#                print("Sell " + str(round(sTwoHold*sellaggro)) + " Presidential")
+#                print("Sell " + str(sellaggro) + " Presidential")
                 sTwoHold -= round(sTwoHold*sellaggro)
-#                print("Buy " + str(round((cash*buyaggro)/sOne[i])) + " Nomination")
+#                print("Buy " + str(buyaggro) + " Nomination")
                 try:
                     sTwoPur -= round(sTwoHold*sellaggro) * (sTwoPur/sTwoHold)
                 except:
