@@ -9,7 +9,6 @@ import database_functions as db
 import pandas as pd
 from datetime import datetime, timedelta
 import time
-import pyscopg2
 
 def database_start():
     while True:
