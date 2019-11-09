@@ -26,38 +26,7 @@ def getdbmaterial():
     return parsed_data
 
 
-# In[4]:
-
-
-#db = getdbmaterial()
-
-
-# In[5]:
-
-
-#market = db['markets']
-#len(market)
-#print(type(market))
-#print(market[1].keys())
-#print(market[1]['id'])
-#contract = market[20]['contracts']
-#print(contract[1].keys())
-#print(len(contract))
-
-
-# In[6]:
-
-
-def marketlistmakerfordb():
-    marketidlist = []
-    for i in range (0, (len(market)-1)):
-        market_id = market[i]['id']
-        marketidlist.append(market_id)
-    return marketidlist
-        
-
-
-# In[7]:
+# In[36]:
 
 
 def contractmakerfordb():
@@ -70,8 +39,8 @@ def contractmakerfordb():
         market_name = market[i]['name']
         market_id = market[i]['id']
         contracts = current_market['contracts']
-        for i in range(0, (len(contracts)-1)):
-            current_contract = contracts[i]
+        for i in contracts:
+            current_contract = i
             contract_id = current_contract['id']
             index = date.strftime("%Y%m%d'T'%H%M%S")+'-'+str(contract_id)
             contract_name = current_contract['name']
@@ -96,22 +65,66 @@ def contractmakerfordb():
     return database_df
 
 
-# In[9]:
+# In[59]:
 
 
-'''
-import sqlalchemy as db
-dataframe_insert = contractmakerfordb()
-engine = db.create_engine('sqlite:///predictit.sqlite3', echo=False)
+def pricecsvmaker(marketname1, marketname2, contractname1, contractname2):
+    data = getdbmaterial()
+    markets = data['markets']
+    price_A = []
+    price_B = []
+    for i in range (0, (len(market)-1)):
+        current_market = market[i]
+        market_name = market[i]['name']
+        if market_name == marketname1:
+            contracts = current_market['contracts']
+            for i in contracts:
+                current_contract = i
+                contract_name = current_contract['name']
+                if contract_name == contractname1:
+                    price = current_contract['bestBuyYesCost']
+                    price_A.append(price)
+        if market_name == marketname2:
+            contracts = current_market['contracts']
+            for i in contracts:
+                current_contract = i
+                contract_name = current_contract['name']
+                if contract_name == contractname2:
+                    price = current_contract['bestBuyYesCost']
+                    price_B.append(price)
+    pricelist = price_A+price_B
+    return pricelist
 
-dataframe_insert.to_sql('Contracts', con=engine, if_exists='append', index_label='id')
-'''
+#test = pricecsvmaker('Which party will win the 2020 U.S. presidential election?', 
+#                     'Will Mark Cuban run for president in 2020?',
+#                    'Democratic', 'Will Mark Cuban run for president in 2020?'
+#                    )
+#with open('document.csv','a') as fd:
+#    fd.write(myCsvRow)
 
 
-# In[10]:
+# In[61]:
 
 
-'''engine.execute("SELECT COUNT(*) FROM Contracts").fetchall()'''
+test
+
+
+# In[62]:
+
+
+
+
+
+# In[15]:
+
+
+
+
+
+# In[28]:
+
+
+
 
 
 # In[ ]:
