@@ -73,7 +73,7 @@ def pricecsvmaker(marketname1, marketname2, contractname1, contractname2):
     markets = data['markets']
     price_A = []
     price_B = []
-    for i in range (0, (len(market)-1)):
+    for i in range (0, (len(markets)-1)):
         current_market = market[i]
         market_name = market[i]['name']
         if market_name == marketname1:
