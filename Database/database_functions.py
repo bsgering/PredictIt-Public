@@ -57,10 +57,10 @@ def contractmakerfordb():
                                   contract_bestbuyno, contract_bestsellyes, contract_bestsellno,
                                   contract_lastcloseprice]
             contractlist.append(contractlist_insert)
-    db_column_names = ['Index','Date', 'Market ID', 'Contract ID', 'Market Name', 'Contract Name', 'Contract End Date', 
-                      'Contract Status', 'Contract Last Trade Price', 'Contract Best Buy Yes Price',
-                      'Contract Best Buy No Price', 'Contract Best Sell Yes Price', 
-                      'Contract Best Sell No Price', 'Contract Last Close Price']
+    db_column_names = ['index','date', 'market_id', 'contract_id', 'market_name', 'contract_name', 'contract_end_date', 
+                      'contract_status', 'contract_last_trade_price', 'contract_best_buy_yes_price',
+                      'contract_best_buy_no_price', 'contract_best_sell_yes_price', 
+                      'contract_best_sell_no_price', 'contract_last_close_price']
     database_df = pd.DataFrame(contractlist, columns = db_column_names)
     return database_df
 
