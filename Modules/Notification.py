@@ -83,7 +83,9 @@ def notifyMe(csv, buyaggro, sellaggro, zscore, stock1name, stock2name, sendmessa
     #SPY.astype(int)
     #VOO = df['VOO']
     #SPY = df['SPY']
+    messenger = []
     lists = pairsTradeNotificationFunction(Stock1, Stock2, buyaggro, sellaggro, zscore, stock1name, stock2name)
+    messenger.append(lists[5])
     if len(lists[0]) == 0: 
         return 0
     if sendmessage[-1] == lists[5]
@@ -95,7 +97,7 @@ def notifyMe(csv, buyaggro, sellaggro, zscore, stock1name, stock2name, sendmessa
         webhook.send('Time is ' + str(now.hour)+':'+str(now.minute)+', ' + str(lists[0]) +', ' + str(lists[1]))
         #webhook.send(lists[0])
         #webhook.send(lists[1])
-    return
+    return messenger
 
 #https://discordapp.com/api/webhooks/648325794665463809/jVRuC2NIFqKlZPFQJkQSIOupd3H05qq3sV6Fu-pQoU_fmJKlJ9bRDHnAwaVoPe4uc5eR
 # In[60]:
